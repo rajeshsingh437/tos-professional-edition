@@ -2,40 +2,66 @@ import {
   LayoutDashboard,
   BriefcaseBusiness,
   ClipboardList,
-  ShieldCheck,
   BarChart3,
+  ShieldCheck,
   Settings,
 } from "lucide-react";
 
-const menu = [
-  { icon: LayoutDashboard, label: "Dashboard" },
-  { icon: BriefcaseBusiness, label: "Portfolio" },
-  { icon: ClipboardList, label: "Trade Desk" },
-  { icon: ShieldCheck, label: "Risk Command" },
-  { icon: BarChart3, label: "Analytics" },
-  { icon: Settings, label: "Settings" },
+const menuItems = [
+  {
+    name: "Dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    name: "Portfolio",
+    icon: BriefcaseBusiness,
+  },
+  {
+    name: "Trading Journal",
+    icon: ClipboardList,
+  },
+  {
+    name: "Analytics",
+    icon: BarChart3,
+  },
+  {
+    name: "Risk Manager",
+    icon: ShieldCheck,
+  },
+  {
+    name: "Settings",
+    icon: Settings,
+  },
 ];
 
 export default function Sidebar() {
   return (
     <aside className="sidebar">
-      <h2 className="logo">TOS</h2>
+      <div className="logo">
+        <h2>TOS</h2>
+        <span>Professional Edition</span>
+      </div>
 
       <nav>
-        {menu.map((item) => {
+        {menuItems.map((item) => {
           const Icon = item.icon;
 
           return (
             <button
-              key={item.label}
-              className="nav-item"
+              key={item.name}
+              className="menu-item"
             >
-              <Icon size={18} />
-              <span>{item.label}</span>
+              <Icon size={20} />
+
+              <span>{item.name}</span>
             </button>
           );
         })}
       </nav>
+
+      <div className="sidebar-footer">
+        Build 0.1.002-B
+      </div>
     </aside>
   );
 }

@@ -1,14 +1,16 @@
 import "./App.css";
 
 import MainLayout from "./components/layout/MainLayout";
+import Sidebar from "./components/layout/Sidebar";
 
 function App() {
   return (
     <MainLayout>
-      <main className="content">
-        <h1>TOS Professional Edition</h1>
+      <Sidebar />
 
-        <p>Build 0.1.002-A</p>
+      <main className="content">
+        <h1>Trading Operating System</h1>
+        <p>Dashboard Loading...</p>
       </main>
     </MainLayout>
   );
