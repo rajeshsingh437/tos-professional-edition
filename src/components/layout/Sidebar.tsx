@@ -1,35 +1,48 @@
 import {
-  LayoutDashboard,
-  BriefcaseBusiness,
-  ClipboardList,
   BarChart3,
-  ShieldCheck,
+  Bot,
+  ClipboardList,
+  LayoutDashboard,
+  LineChart,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 const menuItems = [
   {
     name: "Dashboard",
+    path: "/",
     icon: LayoutDashboard,
   },
   {
-    name: "Portfolio",
-    icon: BriefcaseBusiness,
+    name: "Trading",
+    path: "/trading",
+    icon: LineChart,
   },
   {
-    name: "Trading Journal",
+    name: "Journal",
+    path: "/journal",
     icon: ClipboardList,
   },
   {
     name: "Analytics",
+    path: "/analytics",
     icon: BarChart3,
   },
   {
     name: "Risk Manager",
+    path: "/risk",
     icon: ShieldCheck,
   },
   {
+    name: "AI Assistant",
+    path: "/ai",
+    icon: Bot,
+  },
+  {
     name: "Settings",
+    path: "/settings",
     icon: Settings,
   },
 ];
@@ -38,29 +51,32 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="logo">
-        <h2>TOS</h2>
-        <span>Professional Edition</span>
+        <h1>TOS</h1>
+        <p>Professional Edition</p>
       </div>
 
-      <nav>
+      <nav className="sidebar-menu">
         {menuItems.map((item) => {
           const Icon = item.icon;
 
           return (
-            <button
+            <NavLink
               key={item.name}
-              className="menu-item"
+              to={item.path}
+              className={({ isActive }) =>
+                `menu-item ${isActive ? "active" : ""}`
+              }
             >
               <Icon size={20} />
-
               <span>{item.name}</span>
-            </button>
+            </NavLink>
           );
         })}
       </nav>
 
       <div className="sidebar-footer">
-        Build 0.1.002-B
+        <div className="version">v0.2.0-alpha.1</div>
+        <div className="status">● Development Build</div>
       </div>
     </aside>
   );
