@@ -1,0 +1,56 @@
+/* ==========================================================
+   APPLICATION LAYOUT
+========================================================== */
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: var(--bg-app);
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+/* =========================
+   PAGE CONTENT
+========================= */
+
+.page-content {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: var(--space-xl);
+
+  background: var(--bg-app);
+}
+
+/* Scrollbar */
+
+.page-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.page-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.page-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 20px;
+}
+
+.page-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
