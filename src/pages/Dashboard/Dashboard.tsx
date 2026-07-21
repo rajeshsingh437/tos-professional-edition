@@ -1,64 +1,99 @@
+import MarketRow from "../../components/common/MarketRow";
 import Panel from "../../components/common/Panel";
 import StatCard from "../../components/common/StatCard";
+
+import { dashboardStats } from "../../constants/dashboardData";
+import {
+  marketPulse,
+  tradingNotes,
+  watchlist,
+} from "../../constants/dashboardLists";
 
 export default function Dashboard() {
   return (
     <div className="dashboard-page">
       <div className="dashboard-grid">
-        {/* KPI Cards */}
+        {/* ===========================
+            KPI CARDS
+        =========================== */}
 
         <div className="kpi-grid">
-          <StatCard
-            title="Account Equity"
-            value="₹10,00,000"
-            subtitle="Total Trading Capital"
-          />
-
-          <StatCard
-            title="Today's P/L"
-            value="+₹8,450"
-            subtitle="Open Profit"
-            trend="positive"
-          />
-
-          <StatCard title="Win Rate" value="67.4%" subtitle="Last 100 Trades" />
-
-          <StatCard
-            title="Risk Used"
-            value="0.65%"
-            subtitle="Today's Risk"
-            trend="negative"
-          />
+          {dashboardStats.map((stat) => (
+            <StatCard
+              key={stat.title}
+              title={stat.title}
+              value={stat.value}
+              subtitle={stat.subtitle}
+              trend={stat.trend}
+            />
+          ))}
         </div>
 
-        {/* Middle Section */}
+        {/* ===========================
+            MAIN CONTENT
+        =========================== */}
 
         <div className="content-grid">
+          {/* WATCHLIST */}
+
           <Panel title="Watchlist">
-            <p>NIFTY</p>
-            <p>BANKNIFTY</p>
-            <p>RELIANCE</p>
-            <p>HDFCBANK</p>
-            <p>INFY</p>
+            <MarketRow
+              symbol={watchlist[0]}
+              value="25,250"
+              change="+0.65%"
+              positive
+            />
+
+            <MarketRow
+              symbol={watchlist[1]}
+              value="57,890"
+              change="-0.42%"
+              positive={false}
+            />
+
+            <MarketRow
+              symbol={watchlist[2]}
+              value="1,622"
+              change="+1.18%"
+              positive
+            />
+
+            <MarketRow
+              symbol={watchlist[3]}
+              value="2,070"
+              change="+0.31%"
+              positive
+            />
+
+            <MarketRow
+              symbol={watchlist[4]}
+              value="1,715"
+              change="-0.15%"
+              positive={false}
+            />
           </Panel>
+
+          {/* MARKET PULSE */}
 
           <Panel title="Market Pulse">
-            <p>India VIX</p>
-            <p>USD / INR</p>
-            <p>Brent Crude</p>
-            <p>Gold</p>
-            <p>Gift Nifty</p>
+            <ul>
+              {marketPulse.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           </Panel>
-        </div>
 
-        {/* Bottom Section */}
+          {/* TRADING NOTES */}
 
-        <div className="bottom-grid">
           <Panel title="Trading Notes">
-            <p>• Wait for Opening Range</p>
-            <p>• Avoid Overtrading</p>
-            <p>• Respect Maximum Daily Loss</p>
+            <ul>
+              {tradingNotes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
           </Panel>
+
+          {/* RECENT TRADES */}
 
           <Panel title="Recent Trades">
             <p>No trades today.</p>

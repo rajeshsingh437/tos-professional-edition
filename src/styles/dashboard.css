@@ -126,3 +126,60 @@
 .stat-card.neutral .stat-value {
   color: white;
 }
+/* ===========================
+   Market Row
+=========================== */
+
+.market-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 0;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  transition: all 0.2s ease;
+}
+
+.market-row:last-child {
+  border-bottom: none;
+}
+
+.market-row:hover {
+  padding-left: 8px;
+}
+
+.market-symbol {
+  font-size: 15px;
+  font-weight: 600;
+
+  color: #f4f6fb;
+}
+
+.market-values {
+  display: flex;
+  gap: 18px;
+
+  align-items: center;
+}
+
+.market-price {
+  color: #d0d7e5;
+}
+
+.market-change {
+  width: 70px;
+
+  text-align: right;
+
+  font-weight: 700;
+}
+
+.market-change.positive {
+  color: #22c55e;
+}
+
+.market-change.negative {
+  color: #ef4444;
+}
