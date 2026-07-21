@@ -5,7 +5,11 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./app/routes";
 
 import "./index.css";
+
+import "./styles/dashboard.css";
+import "./styles/header.css";
 import "./styles/layout.css";
+import "./styles/sidebar.css";
 import "./styles/variables.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import Dashboard from "../pages/Dashboard/Dashboard";
 import AppLayout from "./AppLayout";
 
 const Placeholder = ({ title }: { title: string }) => (
@@ -21,7 +22,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Placeholder title="Dashboard" />,
+        element: <Dashboard />,
       },
       {
         path: "trading",

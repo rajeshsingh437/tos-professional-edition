@@ -1,0 +1,128 @@
+/* ==========================================
+   Dashboard Foundation
+========================================== */
+
+.dashboard-page {
+  padding: 32px;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* ---------- Panel ---------- */
+
+.panel {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.panel-header h3 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 18px;
+}
+
+.panel-body {
+  color: #d1d5db;
+}
+/* ==========================================
+   Stat Card
+========================================== */
+
+.stat-card {
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 16px;
+
+  padding: 22px;
+
+  transition: 0.25s ease;
+
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #2563eb;
+
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.18);
+}
+
+.stat-title {
+  font-size: 13px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: #9ca3af;
+}
+
+.stat-value {
+  margin-top: 14px;
+
+  font-size: 34px;
+
+  font-weight: 700;
+
+  color: white;
+}
+
+.stat-subtitle {
+  margin-top: 12px;
+
+  color: #9ca3af;
+
+  font-size: 14px;
+}
+
+/* Trend Colors */
+
+.stat-card.positive .stat-value {
+  color: #22c55e;
+}
+
+.stat-card.negative .stat-value {
+  color: #ef4444;
+}
+
+.stat-card.neutral .stat-value {
+  color: white;
+}

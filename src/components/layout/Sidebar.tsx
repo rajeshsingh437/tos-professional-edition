@@ -52,7 +52,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="logo">
         <h1>TOS</h1>
-        <p>Professional Edition</p>
+        <span>Professional Edition</span>
       </div>
 
       <nav className="sidebar-menu">
@@ -63,11 +63,12 @@ export default function Sidebar() {
             <NavLink
               key={item.name}
               to={item.path}
+              end={item.path === "/"}
               className={({ isActive }) =>
                 `menu-item ${isActive ? "active" : ""}`
               }
             >
-              <Icon size={20} />
+              <Icon className="menu-icon" size={20} />
               <span>{item.name}</span>
             </NavLink>
           );
@@ -75,8 +76,12 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <div className="version">v0.2.0-alpha.1</div>
-        <div className="status">● Development Build</div>
+        <div className="version">TOS Professional Edition</div>
+        <div className="build">v0.2.0-alpha.2</div>
+        <div className="status">
+          <span className="status-dot"></span>
+          Development Build
+        </div>
       </div>
     </aside>
   );
