@@ -2,9 +2,10 @@ import MarketRow from "../../components/common/MarketRow";
 import Panel from "../../components/common/Panel";
 import SectionHeader from "../../components/common/SectionHeader";
 import StatCard from "../../components/common/StatCard";
+import SessionReadiness from "../../components/dashboard/SessionReadiness";
 
 import { dashboardStats } from "../../constants/dashboardData";
-import { marketPulse, tradingNotes } from "../../constants/dashboardLists";
+import { marketPulse } from "../../constants/dashboardLists";
 
 export default function Dashboard() {
   return (
@@ -15,11 +16,19 @@ export default function Dashboard() {
         action="LIVE"
       />
 
-      <div className="dashboard-grid">
-        {/* ======================================================
-            KPI CARDS
-        ======================================================= */}
+      {/* ======================================================
+          SESSION READINESS
+      ======================================================= */}
 
+      <div style={{ marginBottom: "24px" }}>
+        <SessionReadiness />
+      </div>
+
+      {/* ======================================================
+          KPI CARDS
+      ======================================================= */}
+
+      <div className="dashboard-grid">
         <div className="kpi-grid">
           {dashboardStats.map((stat) => (
             <StatCard
@@ -77,16 +86,17 @@ export default function Dashboard() {
             </ul>
           </Panel>
 
-          <Panel title="Trading Notes">
-            <ul>
-              {tradingNotes.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </Panel>
-
           <Panel title="Recent Trades">
             <p>No trades today.</p>
+          </Panel>
+
+          <Panel title="Today's Mission">
+            <ul>
+              <li>✅ Protect Capital</li>
+              <li>✅ Follow Trading Plan</li>
+              <li>✅ Respect Stop Loss</li>
+              <li>✅ No Impulsive Re-entry</li>
+            </ul>
           </Panel>
         </div>
       </div>

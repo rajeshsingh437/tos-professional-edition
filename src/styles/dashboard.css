@@ -313,3 +313,125 @@
 .status-badge.info .status-dot {
   background: #3b82f6;
 }
+/* ==========================================================
+   PROGRESS BAR
+========================================================== */
+
+.progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progress-label {
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.progress-value {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.progress-track {
+  width: 100%;
+  height: 12px;
+
+  background: #1f2937;
+
+  border-radius: 999px;
+
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  transition: width 0.4s ease;
+}
+
+.progress-success {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.progress-warning {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.progress-danger {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+/* ==========================================================
+   SESSION READINESS
+========================================================== */
+
+.session-readiness {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.readiness-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-text {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.readiness-score {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.check-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  color: #d1d5db;
+
+  font-size: 15px;
+}
+
+.recommendation-box {
+  background: #111827;
+
+  border: 1px solid #273244;
+
+  border-radius: 12px;
+
+  padding: 16px;
+}
+
+.recommendation-box h4 {
+  margin-bottom: 8px;
+
+  color: white;
+}
+
+.recommendation-box p {
+  color: #94a3b8;
+
+  line-height: 1.5;
+}
