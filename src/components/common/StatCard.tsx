@@ -11,11 +11,14 @@ export default function StatCard({
   subtitle,
   trend = "neutral",
 }: StatCardProps) {
+  const trendClass =
+    trend === "positive" ? "positive" : trend === "negative" ? "negative" : "";
+
   return (
-    <div className={`stat-card ${trend}`}>
+    <div className="stat-card">
       <div className="stat-title">{title}</div>
 
-      <div className="stat-value">{value}</div>
+      <div className={`stat-value ${trendClass}`}>{value}</div>
 
       <div className="stat-subtitle">{subtitle}</div>
     </div>

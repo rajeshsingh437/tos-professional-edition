@@ -1,32 +1,18 @@
-export default function Header() {
-  const today = new Date().toLocaleDateString("en-IN", {
-    weekday: "long",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+import StatusBadge from "../common/StatusBadge";
 
+export default function Header() {
   return (
     <header className="header">
       <div className="header-left">
-        <h1>Dashboard</h1>
-        <p>Welcome back, Rajesh 👋</p>
+        <h1>Trading Operating System</h1>
+
+        <p>Professional Edition • Build 0.2.6 Alpha</p>
       </div>
 
       <div className="header-right">
-        <div className="header-date">
-          <span className="label">Today</span>
-          <strong>{today}</strong>
-        </div>
+        <StatusBadge text="Market Closed" type="danger" />
 
-        <div className="market-status">
-          <span className="market-dot"></span>
-          Market Closed
-        </div>
-
-        <div className="user-profile">
-          <span>RS</span>
-        </div>
+        <div className="user-profile">RS</div>
       </div>
     </header>
   );
