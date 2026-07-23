@@ -2,7 +2,10 @@ import MarketRow from "../../components/common/MarketRow";
 import Panel from "../../components/common/Panel";
 import SectionHeader from "../../components/common/SectionHeader";
 import StatCard from "../../components/common/StatCard";
+
+import DisciplineCenter from "../../components/dashboard/DisciplineCenter";
 import SessionReadiness from "../../components/dashboard/SessionReadiness";
+import TradingCommandCenter from "../../components/dashboard/TradingCommandCenter";
 
 import { dashboardStats } from "../../constants/dashboardData";
 import { marketPulse } from "../../constants/dashboardLists";
@@ -46,6 +49,8 @@ export default function Dashboard() {
         ======================================================= */}
 
         <div className="content-grid">
+          {/* Watchlist */}
+
           <Panel title="Watchlist">
             <MarketRow symbol="NIFTY" value="25,250" change="+0.65%" positive />
 
@@ -78,6 +83,8 @@ export default function Dashboard() {
             />
           </Panel>
 
+          {/* Market Pulse */}
+
           <Panel title="Market Pulse">
             <ul>
               {marketPulse.map((item) => (
@@ -86,9 +93,15 @@ export default function Dashboard() {
             </ul>
           </Panel>
 
-          <Panel title="Recent Trades">
-            <p>No trades today.</p>
-          </Panel>
+          {/* NEW COMMAND CENTER */}
+
+          <TradingCommandCenter />
+
+          {/* Discipline */}
+
+          <DisciplineCenter />
+
+          {/* Mission */}
 
           <Panel title="Today's Mission">
             <ul>
@@ -96,6 +109,8 @@ export default function Dashboard() {
               <li>✅ Follow Trading Plan</li>
               <li>✅ Respect Stop Loss</li>
               <li>✅ No Impulsive Re-entry</li>
+              <li>✅ Maximum 3 Trades</li>
+              <li>✅ Journal Every Trade</li>
             </ul>
           </Panel>
         </div>
