@@ -1,32 +1,55 @@
+import { ShieldAlert, Target, TrendingUp, Wallet } from "lucide-react";
 
-export default function DashboardCards()
- {
+import MetricTile from "../common/MetricTile";
+
+export default function DashboardCards() {
   const cards = [
     {
-      title: "Portfolio Value",
-      value: "₹12,45,000",
+      label: "Account Equity",
+      value: "₹10,00,000",
+      subtitle: "Total Trading Capital",
+      trend: "Protected",
+      variant: "info" as const,
+      icon: <Wallet size={26} />,
     },
     {
-      title: "Today's P/L",
-      value: "+₹14,520",
+      label: "Today's P/L",
+      value: "+₹8,450",
+      subtitle: "Open Profit",
+      trend: "+0.84%",
+      variant: "success" as const,
+      icon: <TrendingUp size={26} />,
     },
     {
-      title: "Win Rate",
-      value: "63.4%",
+      label: "Win Rate",
+      value: "67.4%",
+      subtitle: "Last 100 Trades",
+      trend: "Above Target",
+      variant: "success" as const,
+      icon: <Target size={26} />,
     },
     {
-      title: "Average R:R",
-      value: "2.15",
+      label: "Risk Used",
+      value: "0.65%",
+      subtitle: "Today's Risk",
+      trend: "Safe",
+      variant: "warning" as const,
+      icon: <ShieldAlert size={26} />,
     },
   ];
 
   return (
     <div className="dashboard-cards">
       {cards.map((card) => (
-        <div className="dashboard-card" key={card.title}>
-          <div className="card-title">{card.title}</div>
-          <div className="card-value">{card.value}</div>
-        </div>
+        <MetricTile
+          key={card.label}
+          label={card.label}
+          value={card.value}
+          subtitle={card.subtitle}
+          trend={card.trend}
+          variant={card.variant}
+          icon={card.icon}
+        />
       ))}
     </div>
   );

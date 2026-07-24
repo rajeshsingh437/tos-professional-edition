@@ -1,3 +1,7 @@
+@import "./styles/variables.css";
+@import "./styles/panel.css";
+@import "./styles/status-badge.css";
+@import "./styles/metric-tile.css";
 * {
   margin: 0;
   padding: 0;

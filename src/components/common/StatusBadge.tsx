@@ -1,14 +1,21 @@
+import type { ReactNode } from "react";
+
+type StatusType =
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
+  | "neutral"
+  | "purple";
+
 interface StatusBadgeProps {
-  text: string;
-  type?: "success" | "danger" | "warning" | "info";
+  type?: StatusType;
+  children: ReactNode;
 }
 
-export default function StatusBadge({ text, type = "info" }: StatusBadgeProps) {
-  return (
-    <div className={`status-badge ${type}`}>
-      <span className="status-dot"></span>
-
-      {text}
-    </div>
-  );
+export default function StatusBadge({
+  type = "neutral",
+  children,
+}: StatusBadgeProps) {
+  return <span className={`status-badge status-${type}`}>{children}</span>;
 }

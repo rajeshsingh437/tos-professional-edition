@@ -1,0 +1,69 @@
+/* ==========================================
+   Status Badge
+========================================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+
+  border: 1px solid transparent;
+}
+
+/* Success */
+
+.status-success {
+  background: rgba(22, 199, 132, 0.15);
+  color: var(--color-success);
+  border-color: rgba(22, 199, 132, 0.35);
+}
+
+/* Warning */
+
+.status-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-warning);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+/* Danger */
+
+.status-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-danger);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* Info */
+
+.status-info {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--color-info);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+/* Purple */
+
+.status-purple {
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--color-purple);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+/* Neutral */
+
+.status-neutral {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text-secondary);
+  border-color: rgba(148, 163, 184, 0.25);
+}

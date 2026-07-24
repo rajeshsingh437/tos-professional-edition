@@ -1,90 +1,84 @@
-/* ==========================================================
+d/* ==========================================
    TOS Professional Design System
-   Version : 0.2.0-alpha.2
-========================================================== */
+   Version 1.0
+========================================== */
 
 :root {
-  /* Backgrounds */
-  --bg-app: #0f172a;
-  --bg-sidebar: #111827;
-  --bg-header: #111827;
-  --bg-panel: #1e293b;
-  --bg-panel-hover: #273449;
+  /* ==========================
+     Brand
+  ========================== */
 
-  /* Borders */
-  --border-color: #334155;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
 
-  /* Typography */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --color-success: #16c784;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+  --color-purple: #8b5cf6;
 
-  /* Brand */
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
+  /* ==========================
+     Backgrounds
+  ========================== */
 
-  /* Status */
-  --success: #22c55e;
-  --danger: #ef4444;
-  --warning: #f59e0b;
+  --bg-app: #111827;
+  --bg-sidebar: #0f172a;
 
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  --bg-panel: #1b2238;
+  --bg-panel-hover: #212c49;
 
-  /* Shadows */
-  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --bg-surface: #151d31;
 
-  /* Sidebar */
-  --sidebar-width: 250px;
+  /* ==========================
+     Borders
+  ========================== */
 
-  /* Header */
-  --header-height: 72px;
+  --border-color: #27385e;
+  --border-soft: rgba(255, 255, 255, 0.08);
 
-  /* Spacing */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
+  /* ==========================
+     Typography
+  ========================== */
 
-  /* Transition */
-  --transition: all 0.25s ease;
-}
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
 
-/* ==========================================================
-   Base Reset
-========================================================== */
+  /* ==========================
+     Radius
+  ========================== */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
 
-html,
-body,
-#root {
-  width: 100%;
-  height: 100%;
-}
+  /* ==========================
+     Spacing
+  ========================== */
 
-body {
-  background: var(--bg-app);
-  color: var(--text-primary);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
 
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  /* ==========================
+     Shadows
+  ========================== */
 
-  overflow: hidden;
-}
+  --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.18);
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.28);
 
-button {
-  font: inherit;
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.4);
+
+  /* ==========================
+     Animation
+  ========================== */
+
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
 }
