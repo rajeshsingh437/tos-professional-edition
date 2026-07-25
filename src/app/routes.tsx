@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import Dashboard from "../pages/Dashboard/Dashboard";
+import TradeBookPage from "../pages/Journal/TradeBookPage";
+
 import AppLayout from "./AppLayout";
 
 const Placeholder = ({ title }: { title: string }) => (
@@ -30,7 +32,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "journal",
-        element: <Placeholder title="Journal" />,
+        element: <TradeBookPage />,
       },
       {
         path: "analytics",
