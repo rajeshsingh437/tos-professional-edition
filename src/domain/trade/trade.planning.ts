@@ -1,81 +1,111 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Planning
- *
- * Purpose:
- * Defines the trading plan before any order is placed.
+ * Module: Trade Planning
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
+import type { TradeInstrument } from "./trade.instrument";
+
 /**
- * Trading Plan
+ * Trading timeframe.
+ */
+export const TIMEFRAME = {
+  INTRADAY: "Intraday",
+  SWING: "Swing",
+  POSITIONAL: "Positional",
+} as const;
+
+export type Timeframe = (typeof TIMEFRAME)[keyof typeof TIMEFRAME];
+
+/**
+ * Planning section.
+ *
+ * This represents the official trading plan and
+ * must be completed before a trade can move beyond
+ * the Draft stage.
  */
 export interface TradePlanning {
   /**
-   * Why this trade?
+   * Reference to the traded instrument.
    */
-  tradeReason: string;
+  instrument: TradeInstrument;
 
   /**
-   * Trading edge.
+   * Why should this trade exist?
+   */
+  whyThisTrade: string;
+
+  /**
+   * The repeatable statistical edge.
    */
   edge: string;
 
   /**
-   * Trading strategy.
+   * Named trading setup.
+   * Example:
+   * ORB Breakout
+   * VWAP Reversal
    */
   strategy: string;
 
   /**
    * Trading timeframe.
    */
-  timeframe: string;
+  timeframe: Timeframe;
 
   /**
-   * Expected Risk : Reward ratio.
+   * Expected Reward : Risk.
+   * Example:
+   * 2.0
    */
   expectedRiskReward: number;
 
   /**
-   * Maximum acceptable risk.
+   * Planned maximum risk.
+   * INR.
    */
   maximumRisk: number;
 
   /**
-   * Maximum acceptable loss.
+   * Worst possible loss.
+   * INR.
    */
   maximumLoss: number;
 
   /**
-   * Position size.
+   * Planned position size.
+   * Number of lots.
    */
   positionSize: number;
 
   /**
-   * Capital allocated.
+   * Planned capital allocation.
+   * INR.
    */
   capitalAllocation: number;
 
   /**
-   * Current market context.
+   * Optional market context.
    */
-  marketContext: string;
+  marketContext?: string;
 
   /**
-   * Supporting thesis.
+   * Optional supporting thesis.
    */
-  supportingThesis: string;
+  supportingThesis?: string;
 
   /**
-   * Trade invalidation.
+   * What proves this trade wrong?
    */
   invalidation: string;
 
   /**
-   * Entry trigger.
+   * Observable trigger for entry.
    */
   entryTrigger: string;
 }

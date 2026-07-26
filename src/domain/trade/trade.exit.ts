@@ -1,66 +1,98 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Exit
- *
- * Purpose:
- * Captures how the trade was closed and its financial outcome.
+ * Module: Trade Exit
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
+import type { OrderType } from "./trade.execution";
+
 /**
- * Trade Exit
+ * Exit reason categories.
+ */
+export const EXIT_REASON_CATEGORY = {
+  TARGET_HIT: "TARGET_HIT",
+  STOP_HIT: "STOP_HIT",
+  INVALIDATION: "INVALIDATION",
+  TIME_STOP: "TIME_STOP",
+  DISCRETIONARY: "DISCRETIONARY",
+  OTHER: "OTHER",
+} as const;
+
+export type ExitReasonCategory =
+  (typeof EXIT_REASON_CATEGORY)[keyof typeof EXIT_REASON_CATEGORY];
+
+/**
+ * One exit leg.
+ */
+export interface ExitLeg {
+  /**
+   * Unique leg identifier.
+   */
+  legId: string;
+
+  /**
+   * Executed exit price.
+   */
+  price: number;
+
+  /**
+   * Exit quantity.
+   */
+  quantity: number;
+
+  /**
+   * Exit timestamp (ISO 8601).
+   */
+  timestamp: string;
+
+  /**
+   * Order type.
+   */
+  orderType: OrderType;
+}
+
+/**
+ * Trade Exit section.
+ *
+ * Represents every transaction that
+ * closes the position.
  */
 export interface TradeExit {
   /**
-   * Exit price.
+   * Exit legs.
    */
-  exitPrice: number;
+  exits: ExitLeg[];
 
   /**
-   * Exit date & time (ISO 8601).
+   * Quantity-weighted average exit.
+   * Computed.
    */
-  exitTime: string;
+  averageExit: number;
 
   /**
-   * Quantity exited.
+   * Realised profit/loss (INR).
+   * Computed.
    */
-  exitQuantity: number;
+  realisedPnL: number;
 
   /**
-   * Exit reason.
+   * Planned-risk multiple.
+   * Computed.
    */
-  exitReason: string;
+  rMultiple: number;
 
   /**
-   * Gross profit or loss.
+   * Exit category.
    */
-  grossPnL: number;
+  exitReasonCategory: ExitReasonCategory;
 
   /**
-   * Net profit or loss.
+   * Optional notes.
    */
-  netPnL: number;
-
-  /**
-   * Fees, brokerage and taxes.
-   */
-  transactionCost: number;
-
-  /**
-   * Return as percentage.
-   */
-  returnPercentage: number;
-
-  /**
-   * Planned exit followed?
-   */
-  plannedExitFollowed: boolean;
-
-  /**
-   * Additional exit notes.
-   */
-  notes: string;
+  exitReasonNote?: string;
 }

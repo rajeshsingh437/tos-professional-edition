@@ -1,66 +1,59 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Review
- *
- * Purpose:
- * Post-trade evaluation of execution, outcome and learning.
+ * Module: Trade Review
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
 /**
  * Trade Review
+ *
+ * Evaluates the quality of execution
+ * independently of financial outcome.
  */
 export interface TradeReview {
   /**
-   * Was this a good trade idea?
+   * Was the planned entry followed?
    */
-  goodIdea: boolean;
+  planFollowed: boolean;
 
   /**
-   * Was the execution disciplined?
+   * Was discipline maintained?
    */
-  executedWell: boolean;
+  disciplineMaintained: boolean;
 
   /**
-   * Was something valuable learned?
+   * Was the planned position size used?
    */
-  learnedSomething: boolean;
+  sizingCorrect: boolean;
 
   /**
-   * Process score (0–100).
+   * Did the trader interfere manually?
+   */
+  didInterfere: boolean;
+
+  /**
+   * Was the exit emotionally driven?
+   */
+  exitWasEmotional: boolean;
+
+  /**
+   * Was the stop respected?
+   */
+  stopRespected: boolean;
+
+  /**
+   * Would this exact trade be taken again?
+   */
+  wouldTakeAgain: boolean;
+
+  /**
+   * Computed process score.
+   * Range: 0–100
    */
   processScore: number;
-
-  /**
-   * Outcome score (0–100).
-   */
-  outcomeScore: number;
-
-  /**
-   * Biggest mistake made.
-   */
-  biggestMistake: string;
-
-  /**
-   * Biggest strength shown.
-   */
-  biggestStrength: string;
-
-  /**
-   * Key lesson from this trade.
-   */
-  keyLesson: string;
-
-  /**
-   * Action for future improvement.
-   */
-  improvementAction: string;
-
-  /**
-   * Overall review notes.
-   */
-  reviewNotes: string;
 }

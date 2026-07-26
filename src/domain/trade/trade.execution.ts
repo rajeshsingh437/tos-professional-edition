@@ -1,38 +1,39 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Execution
- *
- * Purpose:
- * Records what actually happened when the trade was executed.
+ * Module: Trade Execution
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
 /**
- * Trade Execution
+ * Supported order types.
  */
-export interface TradeExecution {
+export const ORDER_TYPE = {
+  MARKET: "MARKET",
+  LIMIT: "LIMIT",
+  STOP: "STOP",
+  STOP_LIMIT: "STOP_LIMIT",
+} as const;
+
+export type OrderType = (typeof ORDER_TYPE)[keyof typeof ORDER_TYPE];
+
+/**
+ * One executed entry leg.
+ */
+export interface ExecutionLeg {
   /**
-   * Planned entry price.
+   * Unique leg identifier.
    */
-  plannedEntryPrice: number;
+  legId: string;
 
   /**
-   * Actual entry price.
+   * Executed price.
    */
-  actualEntryPrice: number;
-
-  /**
-   * Initial stop loss.
-   */
-  stopLoss: number;
-
-  /**
-   * Planned target price.
-   */
-  targetPrice: number;
+  price: number;
 
   /**
    * Quantity executed.
@@ -40,32 +41,47 @@ export interface TradeExecution {
   quantity: number;
 
   /**
-   * Time when order was executed.
+   * Execution timestamp (ISO 8601).
    */
-  executionTime: string;
-
-  /**
-   * Broker order reference.
-   */
-  orderId: string;
+  timestamp: string;
 
   /**
    * Order type.
    */
-  orderType: string;
+  orderType: OrderType;
+}
 
+/**
+ * Execution section.
+ *
+ * Contains every execution that forms
+ * the ORIGINAL planned position.
+ */
+export interface TradeExecution {
   /**
-   * Whether slippage occurred.
+   * Original entry legs.
    */
-  slippageOccurred: boolean;
+  entries: ExecutionLeg[];
 
   /**
-   * Slippage value.
+   * Quantity-weighted average entry.
+   * Computed.
+   */
+  averageEntry: number;
+
+  /**
+   * Total slippage.
+   * INR.
    */
   slippage: number;
 
   /**
-   * Execution notes.
+   * Broker used.
    */
-  notes: string;
+  broker: string;
+
+  /**
+   * Optional execution notes.
+   */
+  executionNotes?: string;
 }

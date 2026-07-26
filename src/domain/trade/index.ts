@@ -1,23 +1,26 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Public exports
+ * Domain Export Index
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.004
  * ============================================================
  */
 
+export * from "./trade.attachments";
+export * from "./trade.execution";
+export * from "./trade.exit";
+export * from "./trade.identity";
+export * from "./trade.instrument";
+export * from "./trade.learning";
+export * from "./trade.management";
+export * from "./trade.metadata";
+export * from "./trade.planning";
+export * from "./trade.primitives";
+export * from "./trade.psychology";
+export * from "./trade.readiness";
+export * from "./trade.review";
 export * from "./trade.status";
-
-export type * from "./trade.attachments";
-export type * from "./trade.execution";
-export type * from "./trade.exit";
-export type * from "./trade.identity";
-export type * from "./trade.learning";
-export type * from "./trade.management";
-export type * from "./trade.planning";
-export type * from "./trade.psychology";
-export type * from "./trade.readiness";
-export type * from "./trade.review";
-export type * from "./trade.types";
-export type * from "./trade.metadata";
+export * from "./trade.types";

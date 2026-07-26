@@ -1,52 +1,72 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Attachments
- *
- * Purpose:
- * References all external artefacts linked to a trade.
+ * Module: Trade Attachments
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
 /**
- * Single attachment.
+ * Trade stage at which evidence was captured.
+ */
+export const ATTACHMENT_STAGE = {
+  BEFORE_ENTRY: "BeforeEntry",
+  ENTRY: "Entry",
+  MANAGEMENT: "Management",
+  EXIT: "Exit",
+  REVIEW: "Review",
+} as const;
+
+export type AttachmentStage =
+  (typeof ATTACHMENT_STAGE)[keyof typeof ATTACHMENT_STAGE];
+
+/**
+ * Supported attachment types.
+ */
+export const ATTACHMENT_TYPE = {
+  SCREENSHOT: "SCREENSHOT",
+  VIDEO: "VIDEO",
+  CHART_MARKUP: "CHART_MARKUP",
+} as const;
+
+export type AttachmentType =
+  (typeof ATTACHMENT_TYPE)[keyof typeof ATTACHMENT_TYPE];
+
+/**
+ * One attachment associated with a trade.
  */
 export interface TradeAttachment {
   /**
-   * Unique attachment ID.
+   * Stage when captured.
    */
-  id: string;
+  stage: AttachmentStage;
 
   /**
-   * File name.
+   * Attachment type.
    */
-  fileName: string;
+  type: AttachmentType;
 
   /**
-   * File type.
+   * File location.
    */
-  fileType: string;
+  url: string;
 
   /**
-   * Local path or URL.
+   * Capture timestamp.
    */
-  filePath: string;
+  timestamp: string;
 
   /**
    * Optional description.
    */
-  description: string;
-
-  /**
-   * Upload timestamp (ISO 8601).
-   */
-  uploadedAt: string;
+  caption?: string;
 }
 
 /**
- * Attachment collection.
+ * Complete attachment collection.
  */
 export interface TradeAttachments {
   attachments: TradeAttachment[];

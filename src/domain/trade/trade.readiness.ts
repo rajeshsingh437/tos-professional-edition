@@ -1,36 +1,77 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Readiness
- *
- * Purpose:
- * Defines whether the trader is ready to execute the plan.
+ * Module: Trade Readiness
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
 /**
- * Trade Readiness Checklist
+ * Individual readiness checklist item.
+ */
+export interface ReadinessChecklistItem {
+  /**
+   * Checklist label.
+   */
+  label: string;
+
+  /**
+   * Weight.
+   * Total across one checklist = 100.
+   */
+  weight: number;
+
+  /**
+   * Whether this condition passed.
+   */
+  passed: boolean;
+}
+
+/**
+ * GO / CAUTION / STOP verdict.
+ */
+export const READINESS_VERDICT = {
+  GO: "GO",
+  CAUTION: "CAUTION",
+  STOP: "STOP",
+} as const;
+
+export type ReadinessVerdict =
+  (typeof READINESS_VERDICT)[keyof typeof READINESS_VERDICT];
+
+/**
+ * Readiness section.
+ *
+ * Determines whether the trade
+ * should be executed.
  */
 export interface TradeReadiness {
-  sleepAdequate: boolean;
+  /**
+   * Weighted checklist.
+   */
+  checklist: ReadinessChecklistItem[];
 
-  emotionStable: boolean;
+  /**
+   * Optional notes about today's mindset.
+   */
+  todaysMindset?: string;
 
-  newsChecked: boolean;
+  /**
+   * Revenge trading override.
+   */
+  revengeTradingFlag: boolean;
 
-  economicCalendarChecked: boolean;
+  /**
+   * Computed score.
+   * Range: 0–100.
+   */
+  score: number;
 
-  trendConfirmed: boolean;
-
-  liquidityAdequate: boolean;
-
-  riskRewardAcceptable: boolean;
-
-  riskWithinDailyLimit: boolean;
-
-  todaysMindset: string;
-
-  revengeTrading: boolean;
+  /**
+   * Computed verdict.
+   */
+  verdict: ReadinessVerdict;
 }

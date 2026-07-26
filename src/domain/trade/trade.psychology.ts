@@ -1,63 +1,84 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Psychology
- *
- * Purpose:
- * Captures the trader's emotional and psychological state.
+ * Module: Trade Psychology
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
+/**
+ * Controlled emotion labels.
+ */
+export const TRADE_EMOTION = {
+  CALM: "Calm",
+  CONFIDENT: "Confident",
+  ANXIOUS: "Anxious",
+  FRUSTRATED: "Frustrated",
+  EUPHORIC: "Euphoric",
+  FEARFUL: "Fearful",
+  NEUTRAL: "Neutral",
+} as const;
+
+export type TradeEmotion = (typeof TRADE_EMOTION)[keyof typeof TRADE_EMOTION];
+
+/**
+ * Trade Psychology
+ *
+ * Captures the trader's emotional state
+ * before, during and after the trade.
+ */
 export interface TradePsychology {
-  /**
-   * Confidence before entering the trade (0–10).
-   */
-  confidenceLevel: number;
-
-  /**
-   * Stress level during the trade (0–10).
-   */
-  stressLevel: number;
-
   /**
    * Emotional state before entry.
    */
-  emotionBeforeTrade: string;
+  emotionBefore: TradeEmotion;
+
+  /**
+   * Emotional state during the trade.
+   */
+  emotionDuring: TradeEmotion;
 
   /**
    * Emotional state after exit.
    */
-  emotionAfterTrade: string;
+  emotionAfter: TradeEmotion;
 
   /**
-   * Was the plan followed?
+   * Confidence level.
+   * Scale: 1–10
    */
-  disciplineMaintained: boolean;
+  confidence: number;
 
   /**
-   * Was there any FOMO?
+   * Stress level.
+   * Scale: 1–10
    */
-  experiencedFOMO: boolean;
+  stress: number;
 
   /**
-   * Was there hesitation?
+   * Fear level.
+   * Scale: 1–10
    */
-  hesitationObserved: boolean;
+  fear: number;
 
   /**
-   * Was there overconfidence?
+   * Greed level.
+   * Scale: 1–10
    */
-  overconfidenceObserved: boolean;
+  greed: number;
 
   /**
-   * Any signs of revenge trading?
+   * Patience level.
+   * Scale: 1–10
    */
-  revengeTradingObserved: boolean;
+  patience: number;
 
   /**
-   * Psychology notes.
+   * Distraction level.
+   * Scale: 1–10
    */
-  notes: string;
+  distraction: number;
 }

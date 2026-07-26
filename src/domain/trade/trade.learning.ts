@@ -1,48 +1,58 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Learning
- *
- * Purpose:
- * Records lessons and improvements from each trade.
+ * Module: Trade Learning
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
+/**
+ * Reference to a trading rule.
+ */
+export interface TradeRuleReference {
+  /**
+   * Unique rule identifier.
+   */
+  ruleId: string;
+
+  /**
+   * Human-readable rule label.
+   */
+  label: string;
+}
+
+/**
+ * Trade Learning
+ *
+ * Every trade should leave behind
+ * something that improves future trading.
+ */
 export interface TradeLearning {
+  /**
+   * Biggest mistake made.
+   */
+  biggestMistake?: string;
+
+  /**
+   * Biggest success.
+   */
+  biggestSuccess?: string;
+
   /**
    * Primary lesson learned.
    */
-  primaryLesson: string;
+  lessonLearned: string;
 
   /**
-   * What worked well?
+   * Rule created because of this trade.
    */
-  strengths: string[];
+  ruleCreated?: TradeRuleReference;
 
   /**
-   * What needs improvement?
+   * Rule broken during this trade.
    */
-  improvements: string[];
-
-  /**
-   * Mistakes identified.
-   */
-  mistakes: string[];
-
-  /**
-   * Action items for future trades.
-   */
-  actionItems: string[];
-
-  /**
-   * Tags for later analysis.
-   */
-  tags: string[];
-
-  /**
-   * Personal notes.
-   */
-  notes: string;
+  ruleBroken?: TradeRuleReference;
 }

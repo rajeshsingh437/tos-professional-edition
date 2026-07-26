@@ -1,55 +1,74 @@
 /**
  * ============================================================
- * TOS Professional Edition
+ * Trading Operating System (TOS)
  * Trade Lifecycle Engine (TLE)
  * ------------------------------------------------------------
- * Trade Identity
- *
- * Purpose:
- * Defines the permanent identity of a trade.
- *
- * One Trade = One Trade ID.
- *
- * The identity of a trade never changes throughout its lifecycle.
+ * Module: Trade Identity
+ * Specification: TLE v1.1 (Frozen)
+ * Build: 0.1.003
  * ============================================================
  */
 
 import type { TradeStatus } from "./trade.status";
 
 /**
+ * Records every lifecycle transition.
+ */
+export interface LifecycleHistoryEntry {
+  /**
+   * Lifecycle status at this point in time.
+   */
+  status: TradeStatus;
+
+  /**
+   * ISO 8601 timestamp.
+   */
+  timestamp: string;
+}
+
+/**
  * Permanent identity of a Trade.
  */
 export interface TradeIdentity {
   /**
-   * Unique identifier for the trade.
-   * Generated once when the trade is created.
-   * Never changes.
+   * Immutable unique Trade ID.
+   * Example:
+   * TOS-20260726-0001
    */
   tradeId: string;
 
   /**
-   * Date and time when the trade was created.
+   * ISO 8601 timestamp.
+   * Must match the first lifecycle history timestamp.
    */
-  createdDate: Date;
+  createdDate: string;
 
   /**
-   * User who created the trade.
+   * User who created this trade.
    */
   createdBy: string;
 
   /**
    * Current lifecycle status.
+   *
+   * NOTE:
+   * During validation this should always equal
+   * lifecycleHistory[last].status.
    */
   status: TradeStatus;
 
   /**
-   * Version number of the trade.
-   * Starts at 1.
+   * Incremented on every edit.
    */
   version: number;
 
   /**
-   * Optional labels used for filtering and reporting.
+   * Optional searchable labels.
    */
   tags: string[];
+
+  /**
+   * Complete lifecycle history.
+   */
+  lifecycleHistory: LifecycleHistoryEntry[];
 }
