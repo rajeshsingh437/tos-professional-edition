@@ -1,0 +1,61 @@
+.planning-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.planning-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.planning-header h2 {
+  margin: 0;
+  color: white;
+}
+
+.planning-header span {
+  color: #7f8da8;
+  font-size: 13px;
+}
+
+.planning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.planning-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.planning-field label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7f8da8;
+}
+
+.field-value {
+  padding: 12px;
+  border: 1px solid #2c364d;
+  border-radius: 8px;
+  background: #151d2b;
+  color: white;
+}
+
+.planning-wide {
+  grid-column: 1 / -1;
+}
+
+.notes-box {
+  min-height: 120px;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #2c364d;
+  background: #151d2b;
+  color: #8c9ab5;
+}

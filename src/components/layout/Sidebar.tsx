@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
+import { useSidebar } from "../../hooks/useSidebar";
+
 const menuItems = [
   {
     name: "Dashboard",
@@ -48,11 +50,14 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
+  const { collapsed } = useSidebar();
+
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
       <div className="logo">
         <h1>TOS</h1>
-        <span>Professional Edition</span>
+
+        {!collapsed && <span>Professional Edition</span>}
       </div>
 
       <nav className="sidebar-menu">
@@ -65,24 +70,29 @@ export default function Sidebar() {
               to={item.path}
               end={item.path === "/"}
               className={({ isActive }) =>
-                `menu-item ${isActive ? "active" : ""}`
+                `menu-item ${isActive ? " active" : ""}`
               }
             >
               <Icon className="menu-icon" size={20} />
-              <span>{item.name}</span>
+
+              {!collapsed && <span>{item.name}</span>}
             </NavLink>
           );
         })}
       </nav>
 
-      <div className="sidebar-footer">
-        <div className="version">TOS Professional Edition</div>
-        <div className="build">v0.2.0-alpha.2</div>
-        <div className="status">
-          <span className="status-dot"></span>
-          Development Build
+      {!collapsed && (
+        <div className="sidebar-footer">
+          <div className="version">TOS Professional Edition</div>
+
+          <div className="build">v0.2.0-alpha.2</div>
+
+          <div className="status">
+            <span className="status-dot" />
+            Development Build
+          </div>
         </div>
-      </div>
+      )}
     </aside>
   );
 }

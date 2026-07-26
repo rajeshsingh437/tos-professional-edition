@@ -14,30 +14,57 @@
   border-right: 1px solid #1f2937;
 
   padding: 28px 20px;
+
+  transition:
+    width 0.25s ease,
+    min-width 0.25s ease,
+    padding 0.25s ease;
+}
+
+/* ---------- Collapsed ---------- */
+
+.sidebar.collapsed {
+  width: 84px;
+  min-width: 84px;
+  padding: 28px 12px;
 }
 
 /* ---------- Logo ---------- */
 
 .logo {
   margin-bottom: 40px;
+  transition: all 0.25s ease;
 }
 
 .logo h1 {
   margin: 0;
-
   font-size: 52px;
   font-weight: 700;
   color: #ffffff;
+  transition: all 0.25s ease;
 }
 
 .logo span {
   display: block;
-
   margin-top: 6px;
-
   color: #9ca3af;
-
   font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+
+/* Hide subtitle when collapsed */
+
+.sidebar.collapsed .logo span {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Make logo compact */
+
+.sidebar.collapsed .logo h1 {
+  font-size: 34px;
+  text-align: center;
 }
 
 /* ---------- Menu ---------- */
@@ -46,7 +73,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-
   flex: 1;
 }
 
@@ -80,16 +106,25 @@
   flex-shrink: 0;
 }
 
+/* ---------- Collapsed Menu ---------- */
+
+.sidebar.collapsed .menu-item {
+  justify-content: center;
+  padding: 14px;
+}
+
+.sidebar.collapsed .menu-item span {
+  display: none;
+}
+
 /* ---------- Footer ---------- */
 
 .sidebar-footer {
   border-top: 1px solid #1f2937;
-
   padding-top: 20px;
-
   color: #9ca3af;
-
   font-size: 13px;
+  transition: opacity 0.2s ease;
 }
 
 .version {
@@ -116,4 +151,10 @@
   border-radius: 50%;
 
   background: #22c55e;
+}
+
+/* Hide footer when collapsed */
+
+.sidebar.collapsed .sidebar-footer {
+  display: none;
 }

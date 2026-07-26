@@ -1,0 +1,58 @@
+.tos-button {
+  border: none;
+  border-radius: 10px;
+
+  padding: 10px 18px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.tos-button:hover {
+  transform: translateY(-1px);
+}
+
+.tos-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tos-button.primary {
+  background: #2d6cff;
+  color: white;
+}
+
+.tos-button.primary:hover {
+  background: #3d79ff;
+}
+
+.tos-button.secondary {
+  background: #273146;
+  color: white;
+}
+
+.tos-button.secondary:hover {
+  background: #33405d;
+}
+
+.tos-button.success {
+  background: #1b8f52;
+  color: white;
+}
+
+.tos-button.success:hover {
+  background: #25a864;
+}
+
+.tos-button.danger {
+  background: #c83b3b;
+  color: white;
+}
+
+.tos-button.danger:hover {
+  background: #db4c4c;
+}
