@@ -1,5 +1,5 @@
 """
-TOS Professional Edition
+AEGIS
 Header Widget
 """
 
@@ -22,9 +22,11 @@ class Header(QWidget):
         layout.setContentsMargins(20, 12, 20, 12)
         layout.setSpacing(2)
 
-        title = QLabel("Trading Operating System")
-
-        title.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        # Title
+        title = QLabel("AEGIS")
+        title.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+        )
 
         title.setStyleSheet("""
             QLabel {
@@ -34,11 +36,11 @@ class Header(QWidget):
             }
         """)
 
-        subtitle = QLabel(
-            "Professional Edition  •  Build 0.2.001"
+        # Subtitle
+        subtitle = QLabel("Build 1.0.001")
+        subtitle.setAlignment(
+            Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
         )
-
-        subtitle.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
         subtitle.setStyleSheet("""
             QLabel {

@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Trading Operating System Professional Edition")
+        self.setWindowTitle("AEGIS")
         self.resize(1600, 900)
         self.setMinimumSize(1280, 720)
 
@@ -64,8 +64,8 @@ class MainWindow(QMainWindow):
         content = QFrame()
 
         content.setSizePolicy(
-            QSizePolicy.Expanding,
-            QSizePolicy.Expanding,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
         )
 
         content_layout = QVBoxLayout(content)

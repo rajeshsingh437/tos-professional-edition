@@ -1,65 +1,51 @@
 """
-TOS Professional Edition
+AEGIS
 Dashboard Page
 """
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QFrame,
-    QLabel,
+    QGridLayout,
     QVBoxLayout,
     QWidget,
 )
 
+from ui.widgets.card import Card
+from ui.widgets.market_card import MarketCard
+from ui.widgets.status_card import StatusCard
+
 
 class Dashboard(QWidget):
     """
-    Main dashboard placeholder.
+    AEGIS Dashboard
     """
 
     def __init__(self):
         super().__init__()
 
-        layout = QVBoxLayout(self)
+        # -------------------------------------------------
+        # Main Layout
+        # -------------------------------------------------
 
+        layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(20)
 
-        welcome_card = QFrame()
+        # -------------------------------------------------
+        # Top Dashboard Row
+        # -------------------------------------------------
 
-        card_layout = QVBoxLayout(welcome_card)
+        top_row = QGridLayout()
+        top_row.setHorizontalSpacing(20)
+        top_row.setVerticalSpacing(20)
 
-        title = QLabel("Welcome to TOS Professional Edition")
+        top_row.addWidget(StatusCard(), 0, 0)
+        top_row.addWidget(MarketCard(), 0, 1)
+        top_row.addWidget(Card("Risk Today"), 0, 2)
 
-        title.setAlignment(Qt.AlignLeft)
+        layout.addLayout(top_row)
 
-        title.setStyleSheet("""
-            QLabel {
-                font-size: 20px;
-                font-weight: 700;
-                color: white;
-            }
-        """)
+        # -------------------------------------------------
+        # Future Dashboard Sections
+        # -------------------------------------------------
 
-        description = QLabel(
-            "Build 0.2.001 – Application Shell\n\n"
-            "This is the foundation of the Trading Operating System.\n"
-            "Future builds will add the Dashboard, Trading Journal,\n"
-            "Analytics, Portfolio, Risk Manager, Reports and Settings."
-        )
-
-        description.setWordWrap(True)
-
-        description.setStyleSheet("""
-            QLabel {
-                font-size: 11pt;
-                color: #C7CDD6;
-            }
-        """)
-
-        card_layout.addWidget(title)
-        card_layout.addSpacing(10)
-        card_layout.addWidget(description)
-
-        layout.addWidget(welcome_card)
         layout.addStretch()

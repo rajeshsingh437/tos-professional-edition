@@ -1,5 +1,5 @@
 """
-TOS Professional Edition
+AEGIS
 Sidebar Navigation
 """
 
@@ -19,7 +19,7 @@ class Sidebar(QListWidget):
 
         self.setFixedWidth(240)
 
-        self.setFocusPolicy(Qt.NoFocus)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         self.addItems(
             [
