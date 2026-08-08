@@ -2,68 +2,168 @@
 AEGIS
 
 Broker Manager
+
+Single entry point for all broker operations.
 """
 
 from __future__ import annotations
 
-from brokers.flattrade.auth_manager import AuthenticationManager
-from brokers.flattrade.oauth_server import OAuthServer
-from brokers.flattrade.oauth_client import OAuthClient
-from brokers.flattrade.rest import RestClient
-from brokers.flattrade.websocket import WebSocketClient
+from src.core.broker.adapters.flattrade_adapter import (
+    FlattradeAdapter,
+)
 
 
 class BrokerManager:
     """
-    Coordinates all broker services.
+    Coordinates the active broker adapter.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
 
-        self.auth = AuthenticationManager()
+        self.adapter = FlattradeAdapter()
 
-        self.oauth_server = OAuthServer()
+    # ==========================================================
+    # Lifecycle
+    # ==========================================================
 
-        self.oauth = OAuthClient(
-            self.auth.broker["api_key"],
-            self.auth.broker["api_secret"],
-        )
+    def start(self) -> None:
+        """
+        Initialize broker services.
+        """
 
-        self.rest = None
+        self.adapter.connect()
 
-        self.websocket = None
+    def login(self) -> bool:
+        """
+        Authenticate with broker.
+        """
+
+        return self.adapter.login()
+
+    def logout(self) -> None:
+        """
+        Logout from broker.
+        """
+
+        self.adapter.logout()
+
+    def connect(self) -> bool:
+        """
+        Connect broker.
+        """
+
+        return self.adapter.connect()
+
+    def disconnect(self) -> None:
+        """
+        Disconnect broker.
+        """
+
+        self.adapter.disconnect()
+
+    # ==========================================================
+    # Properties
+    # ==========================================================
 
     @property
-    def connected(self):
+    def connected(self) -> bool:
 
-        return (
-            self.websocket is not None
-            and self.websocket.connected
+        return self.adapter.is_connected()
+
+    @property
+    def authenticated(self) -> bool:
+
+        return self.adapter.auth.is_authenticated
+
+    # ==========================================================
+    # Account
+    # ==========================================================
+
+    def get_profile(self):
+
+        return self.adapter.get_profile()
+
+    def get_limits(self):
+
+        return self.adapter.get_limits()
+
+    def get_holdings(self):
+
+        return self.adapter.get_holdings()
+
+    def get_positions(self):
+
+        return self.adapter.get_positions()
+
+    def get_orders(self):
+
+        return self.adapter.get_orders()
+
+    def get_tradebook(self):
+
+        return self.adapter.get_tradebook()
+
+    # ==========================================================
+    # Orders
+    # ==========================================================
+
+    def place_order(self, **kwargs):
+
+        return self.adapter.place_order(**kwargs)
+
+    def modify_order(self, order_id, **kwargs):
+
+        return self.adapter.modify_order(
+            order_id,
+            **kwargs,
         )
 
-    def start(self):
+    def cancel_order(self, order_id):
 
-        self.oauth_server.start()
+        return self.adapter.cancel_order(
+            order_id
+        )
 
-    def create_clients(
+    # ==========================================================
+    # Market Data
+    # ==========================================================
+
+    def search_symbol(self, text):
+
+        return self.adapter.search_symbol(text)
+
+    def get_quote(
         self,
-        access_token: str,
+        exchange,
+        symbol,
     ):
 
-        self.rest = RestClient(access_token)
-
-        self.websocket = WebSocketClient(
-            access_token
+        return self.adapter.get_quote(
+            exchange,
+            symbol,
         )
 
-    def connect(self):
+    def subscribe_market_data(self):
 
-        if self.websocket:
+        self.adapter.subscribe_market_data()
 
-            self.websocket.connect()
+    def unsubscribe_market_data(
+        self,
+        symbols,
+    ):
 
-    def disconnect(self):
+        self.adapter.unsubscribe_market_data(
+            symbols
+        )
 
-        if self.websocket:
+    def subscribe_orders(self):
 
-            self.websocket.disconnect()
+        self.adapter.subscribe_orders()
+
+    def subscribe_trades(self):
+
+        self.adapter.subscribe_trades()
+
+    def subscribe_positions(self):
+
+        self.adapter.subscribe_positions()

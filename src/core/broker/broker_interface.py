@@ -1,70 +1,147 @@
 """
-AEGIS Broker Interface
+AEGIS
 
-Every broker adapter must implement this interface.
+Broker Interface
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 class IBrokerAdapter(ABC):
     """
-    Base interface for all broker implementations.
+    Common broker interface implemented by every broker.
     """
+
+    # =====================================================
+    # Connection
+    # =====================================================
 
     @abstractmethod
     def connect(self) -> bool:
-        """Connect to broker."""
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def disconnect(self) -> None:
-        """Disconnect from broker."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def login(self) -> bool:
-        """Authenticate broker session."""
-        raise NotImplementedError
-
-    @abstractmethod
-    def logout(self) -> None:
-        """Logout broker session."""
-        raise NotImplementedError
+        ...
 
     @abstractmethod
     def is_connected(self) -> bool:
-        """Return True if broker is connected."""
-        raise NotImplementedError
+        ...
+
+    # =====================================================
+    # Authentication
+    # =====================================================
 
     @abstractmethod
-    def subscribe_market_data(self) -> None:
-        """Subscribe to live market feed."""
-        raise NotImplementedError
+    def login(self) -> bool:
+        ...
 
     @abstractmethod
-    def subscribe_orders(self) -> None:
-        """Subscribe to order updates."""
-        raise NotImplementedError
+    def logout(self) -> None:
+        ...
+
+    # =====================================================
+    # Account
+    # =====================================================
 
     @abstractmethod
-    def subscribe_trades(self) -> None:
-        """Subscribe to trade updates."""
-        raise NotImplementedError
+    def get_profile(self) -> dict[str, Any]:
+        ...
 
     @abstractmethod
-    def subscribe_positions(self) -> None:
-        """Subscribe to live positions."""
-        raise NotImplementedError
+    def get_limits(self) -> dict[str, Any]:
+        ...
 
     @abstractmethod
-    def get_limits(self):
-        """Fetch account limits."""
-        raise NotImplementedError
+    def get_holdings(self) -> list[dict[str, Any]]:
+        ...
 
     @abstractmethod
-    def get_profile(self):
-        """Fetch user profile."""
-        raise NotImplementedError
+    def get_positions(self) -> list[dict[str, Any]]:
+        ...
+
+    @abstractmethod
+    def get_orders(self) -> list[dict[str, Any]]:
+        ...
+
+    @abstractmethod
+    def get_tradebook(self) -> list[dict[str, Any]]:
+        ...
+
+    # =====================================================
+    # Order Management
+    # =====================================================
+
+    @abstractmethod
+    def place_order(
+        self,
+        **values: Any,
+    ) -> dict[str, Any]:
+        ...
+
+    @abstractmethod
+    def modify_order(
+        self,
+        **values: Any,
+    ) -> dict[str, Any]:
+        ...
+
+    @abstractmethod
+    def cancel_order(
+        self,
+        orderno: str,
+    ) -> dict[str, Any]:
+        ...
+
+    # =====================================================
+    # Market Data
+    # =====================================================
+
+    @abstractmethod
+    def subscribe_market_data(
+        self,
+        symbols: list[str],
+    ) -> None:
+        ...
+
+    @abstractmethod
+    def unsubscribe_market_data(
+        self,
+        symbols: list[str],
+    ) -> None:
+        ...
+
+    @abstractmethod
+    def search_symbol(
+        self,
+        text: str,
+    ) -> list[dict[str, Any]]:
+        ...
+
+    @abstractmethod
+    def get_quote(
+        self,
+        exchange: str,
+        token: str,
+    ) -> dict[str, Any]:
+        ...
+
+    @abstractmethod
+    def get_option_chain(
+        self,
+        exchange: str,
+        symbol: str,
+        strike: str,
+        count: int,
+    ) -> dict[str, Any]:
+        ...
+
+    @abstractmethod
+    def get_historical_data(
+        self,
+        **values: Any,
+    ) -> list[dict[str, Any]]:
+        ...

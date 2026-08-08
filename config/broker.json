@@ -1,13 +1,18 @@
 {
-    "broker": "flattrade",
+  "broker": "flattrade",
 
-    "api_key": "",
+  "client_id": "",
+  "user_id": "",
+  "vendor_code": "",
 
-    "api_secret": "",
+  "api_key": "",
+  "api_secret": "",
 
-    "redirect_uri": "",
+  "redirect_uri": "http://127.0.0.1:5000/flattrade/callback",
 
-    "vendor_code": "",
+  "imei": "AEGIS-PC",
 
-    "imei": "AEGIS-PC"
+  "relay_shared_secret": "",
+
+  "relay_url": "http://YOUR_ORACLE_IP:8091"
 }

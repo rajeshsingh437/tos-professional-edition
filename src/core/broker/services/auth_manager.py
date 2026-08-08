@@ -1,15 +1,25 @@
-"""Flattrade session authentication state management."""
+"""
+AEGIS
+
+Flattrade Authentication Manager
+"""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from config.settings import load_broker, load_session, save_session
+from config.settings import (
+    load_broker,
+    load_session,
+    save_session,
+)
 
 
 @dataclass
 class AuthState:
-    """Current locally stored Flattrade authentication state."""
+    """
+    Current locally stored authentication state.
+    """
 
     authenticated: bool = False
     access_token: str = ""
@@ -17,22 +27,35 @@ class AuthState:
 
 
 class AuthenticationManager:
-    """Load, persist, and clear the Flattrade authentication session."""
+    """
+    Load, persist and clear authentication session.
+    """
 
     def __init__(self) -> None:
+
         self.broker = load_broker()
         self.session = load_session()
 
-        access_token = self.session.get("access_token", "")
+        access_token = self.session.get(
+            "access_token",
+            "",
+        )
+
         self.state = AuthState(
             authenticated=bool(access_token),
             access_token=access_token,
-            client_id=self.session.get("client_id", ""),
+            client_id=self.session.get(
+                "client_id",
+                "",
+            ),
         )
 
     @property
     def is_authenticated(self) -> bool:
-        """Return whether a locally stored access token is available."""
+        """
+        Returns True if an access token exists.
+        """
+
         return self.state.authenticated
 
     def save_authenticated_session(
@@ -40,25 +63,38 @@ class AuthenticationManager:
         access_token: str,
         client_id: str = "",
     ) -> None:
-        """Store a successful OAuth session for subsequent application starts."""
+        """
+        Persist OAuth session.
+        """
+
         if not access_token:
-            raise ValueError("access_token is required")
-        if not client_id:
-            client_id = self.broker["client_id"]
+            raise ValueError(
+                "access_token is required"
+            )
 
         self.state = AuthState(
             authenticated=True,
             access_token=access_token,
             client_id=client_id,
         )
+
         self.session = {
             "access_token": access_token,
             "client_id": client_id,
         }
+
         save_session(self.session)
+        print("Authentication session saved.")
 
     def clear(self) -> None:
-        """Clear the local authentication state and saved session."""
+        """
+        Clear authentication session.
+        """
+
         self.state = AuthState()
         self.session = {}
+
         save_session(self.session)
+
+        print("Authentication session cleared.")
+

@@ -1,6 +1,9 @@
 # ============================================================
+
 # TOS PROFESSIONAL EDITION
+
 # PROJECT SESSION
+
 # ============================================================
 
 ## Project Information
@@ -12,6 +15,7 @@ Repository:
 https://github.com/rajeshsingh437/tos-professional-edition
 
 Technology Stack:
+
 - Python
 - PySide6
 - SQLite (Planned)
@@ -160,3 +164,18 @@ Last Stable Build:
 Build 0.2.001
 
 Initial PySide6 Desktop Application Shell
+
+## Latest Development Progress — 2026-08-01
+
+- Established the broker architecture around the broker interface and a
+  broker-specific Flattrade adapter.
+- Renamed the Flattrade authentication component to
+  `AuthenticationManager` and retained session-backed authentication state.
+- Integrated `OAuthClient` for Flattrade OAuth payload construction and
+  `RestClient` for broker API access in the adapter.
+- Debugged `src/brokers/flattrade/adapter.py`: its constructor indentation
+  was invalid and duplicate initialization had been placed after the context
+  manager return statement.
+- Replaced `adapter.py` as one complete file; do not apply incremental
+  patches to large source files going forward. Use complete-file
+  replacements and verify each replacement by compiling it.

@@ -55,12 +55,10 @@ Thumbs.db
 
 # -----------------------------
 # AEGIS Runtime Files
-# -----------------------------
-session.json
+
+config/broker.json
+config/session.json
 tokens.json
-*.db
-*.sqlite
-*.sqlite3
 
 # Screenshots (generated)
 screenshots/
