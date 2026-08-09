@@ -1,43 +1,54 @@
-"""Flattrade broker adapter for AEGIS."""
+"""
+AEGIS
+
+Generic Broker Adapter
+
+This layer provides a unified interface between BrokerManager and
+individual broker implementations (Flattrade, GO, etc.).
+
+BrokerManager never communicates directly with a broker.
+"""
 
 from __future__ import annotations
 
-import time
-import webbrowser
-from typing import Any, Callable
+from typing import Any
 
 from brokers.base.broker_interface import BrokerInterface
-from brokers.flattrade.auth_manager import AuthenticationManager
-from brokers.flattrade.oauth_client import OAuthClient, OAuthError
-from brokers.flattrade.oauth_server import OAuthServer
-from brokers.flattrade.rest import RestClient
+from brokers.manager import BrokerManager
 
 
-OAUTH_CALLBACK_TIMEOUT_SECONDS = 180
-OAUTH_CALLBACK_POLL_SECONDS = 0.25
-ADAPTER_VERSION = "1.0.0"
+class BrokerAdapter:
+    """
+    Generic broker façade.
 
+    Delegates every broker operation to the active broker managed by
+    BrokerManager.
+    """
 
-class FlattradeAdapter(BrokerInterface):
-    """Concrete Flattrade implementation of the AEGIS broker contract."""
+    VERSION = "1.0.0"
 
-    def __init__(self) -> None:
-        """Initialize authentication, OAuth callback server and REST client."""
+    def __init__(
+        self,
+        manager: BrokerManager | None = None,
+    ) -> None:
 
-        self.auth = AuthenticationManager()
+        self.manager = manager or BrokerManager()
 
-        self.oauth = OAuthClient(
-            api_key=self.auth.broker["api_key"],
-            api_secret=self.auth.broker["api_secret"],
-        )
+    @property
+    def broker(self) -> BrokerInterface:
+        """
+        Return the currently active broker.
+        """
 
-        self.oauth_server = OAuthServer()
-        self._oauth_server_started = False
+        return self.manager.active_broker
 
-        self.rest = RestClient(
-            access_token=self.auth.state.access_token,
-            client_id=self.auth.state.client_id,
-        )
+    @property
+    def broker_name(self) -> str:
+        """
+        Return the active broker name.
+        """
+
+        return self.manager.active_broker_name
 
     # ==========================================================
     # Authentication
@@ -45,139 +56,85 @@ class FlattradeAdapter(BrokerInterface):
 
     @property
     def is_authenticated(self) -> bool:
-        """Return current authentication state."""
+        """
+        Return authentication state of the active broker.
+        """
 
-        return self.auth.is_authenticated
+        return self.broker.is_authenticated
 
     def login(self) -> bool:
-        """Authenticate using the Flattrade OAuth flow via the Oracle Cloud relay."""
+        """
+        Login using the active broker.
+        """
 
-        if self.is_authenticated:
-            print("Already authenticated.")
-            return True
+        return self.broker.login()
 
-        self.oauth_server.request_code = None
+    def logout(self) -> None:
+        """
+        Logout from the active broker.
+        """
 
-        if not self._oauth_server_started:
-            print("Starting OAuth callback server...")
-            self.oauth_server.start()
-            self._oauth_server_started = True
-
-        print("Opening Flattrade login page...")
-        webbrowser.open(self.oauth.authorization_url)
-
-        request_code = self._wait_for_request_code()
-
-        print("Request code received. Forwarding to Oracle Cloud relay...")
-
-        import os
-        import requests
-
-        relay_secret = os.getenv("RELAY_SHARED_SECRET", "YOUR_SECRET_HERE")
-
-        relay_response = requests.post(
-            "http://localhost:8091/complete_login",
-            json={"code": request_code},
-            headers={"Authorization": f"Bearer {relay_secret}"},
-            timeout=15,
-        )
-
-        if relay_response.status_code != 200:
-            raise OAuthError(f"Relay login failed: {relay_response.text}")
-
-        token_response = relay_response.json()
-
-        access_token = str(token_response.get("token") or token_response.get("access_token", ""))
-        client_id = str(token_response.get("client_id") or token_response.get("client", ""))
-
-        self.auth.save_authenticated_session(
-            access_token=access_token,
-            client_id=client_id,
-        )
-
-        self.rest.access_token = access_token
-        self.rest.client_id = client_id
-
-        print("Authentication successful.")
-
-        return True
-
-    def _wait_for_request_code(self) -> str:
-        """Wait for the OAuth callback to return the request code."""
-
-        deadline = (
-            time.monotonic()
-            + OAUTH_CALLBACK_TIMEOUT_SECONDS
-        )
-
-        while time.monotonic() < deadline:
-
-            request_code = self.oauth_server.request_code
-
-            if request_code:
-                return request_code
-
-            time.sleep(
-                OAUTH_CALLBACK_POLL_SECONDS
-            )
-
-        raise OAuthError(
-            "Timed out waiting for Flattrade OAuth callback."
-        )
+        self.broker.logout()
 
     # ==========================================================
     # Account
     # ==========================================================
 
-    def logout(self) -> None:
-        """Clear the locally saved authentication session."""
+    def profile(self) -> dict[str, Any]:
+        """
+        Return account profile.
+        """
 
-        self.auth.clear()
+        return self.broker.get_profile()
 
-        self.rest.access_token = ""
-        self.rest.client_id = ""
+    def funds(self) -> dict[str, Any]:
+        """
+        Return available funds.
+        """
 
-    def get_profile(self) -> dict[str, Any]:
-        """Fetch the account profile when implemented."""
+        return self.broker.get_funds()
 
-        raise NotImplementedError(
-            "Flattrade profile retrieval is not implemented."
-        )
+    def limits(self) -> dict[str, Any]:
+        """
+        Return account limits.
+        """
 
-    def get_funds(self) -> dict[str, Any]:
-        """Return available funds."""
+        return self.broker.get_limits()
 
-        return self.get_limits()
+    def holdings(self) -> list[dict[str, Any]]:
+        """
+        Return holdings.
+        """
 
-    def get_limits(self) -> dict[str, Any]:
-        """Return account limits."""
+        return self.broker.get_holdings()
 
-        return self.rest.get_limits()
+    def positions(self) -> list[dict[str, Any]]:
+        """
+        Return open positions.
+        """
 
-    def get_holdings(self) -> list[dict[str, Any]]:
-        """Return holdings."""
+        return self.broker.get_positions()
 
-        return self.rest.get_holdings()
+    def orders(self) -> list[dict[str, Any]]:
+        """
+        Return order book.
+        """
 
-    def get_positions(self) -> list[dict[str, Any]]:
-        """Return open positions."""
+        return self.broker.get_orders()
 
-        return self.rest.get_positions()
+    def trades(self) -> list[dict[str, Any]]:
+        """
+        Return trade book.
+        """
 
-    def get_orders(self) -> list[dict[str, Any]]:
-        """Return order book."""
+        return self.broker.get_trades()
 
-        return self.rest.get_orders()
+    def tradebook(self) -> list[dict[str, Any]]:
+        """
+        Return trade book (compatibility alias).
+        """
 
-    def get_trades(self) -> list[dict[str, Any]]:
-        """Return trade book."""
-
-        return self.rest.get_tradebook()
-
-    def get_tradebook(self) -> list[dict[str, Any]]:
-        """Return trade book."""
-
-        return self.rest.get_tradebook()
+        return self.broker.get_tradebook()
 
     # ==========================================================
     # Order Management
@@ -196,26 +153,20 @@ class FlattradeAdapter(BrokerInterface):
         trigger_price: float | None = None,
         validity: str = "DAY",
     ) -> dict[str, Any]:
-        """Place a new order."""
+        """
+        Place order.
+        """
 
-        payload: dict[str, Any] = {
-            "exch": exchange,
-            "tsym": symbol,
-            "qty": str(quantity),
-            "trantype": transaction_type,
-            "prctyp": order_type,
-            "prd": product,
-            "ret": validity,
-        }
-
-        if price is not None:
-            payload["prc"] = str(price)
-
-        if trigger_price is not None:
-            payload["trgprc"] = str(trigger_price)
-
-        return self.rest.place_order(
-            **payload,
+        return self.broker.place_order(
+            exchange=exchange,
+            symbol=symbol,
+            quantity=quantity,
+            order_type=order_type,
+            transaction_type=transaction_type,
+            product=product,
+            price=price,
+            trigger_price=trigger_price,
+            validity=validity,
         )
 
     def modify_order(
@@ -223,26 +174,24 @@ class FlattradeAdapter(BrokerInterface):
         order_id: str,
         **kwargs: Any,
     ) -> dict[str, Any]:
-        """Modify an existing order."""
+        """
+        Modify existing order.
+        """
 
-        payload = {
-            "norenordno": order_id,
+        return self.broker.modify_order(
+            order_id,
             **kwargs,
-        }
-
-        return self.rest.modify_order(
-            **payload,
         )
 
     def cancel_order(
         self,
         order_id: str,
     ) -> dict[str, Any]:
-        """Cancel an existing order."""
+        """
+        Cancel order.
+        """
 
-        return self.rest.cancel_order(
-            orderno=order_id,
-        )
+        return self.broker.cancel_order(order_id)
 
     # ==========================================================
     # Market Data
@@ -252,37 +201,41 @@ class FlattradeAdapter(BrokerInterface):
         self,
         text: str,
     ) -> list[dict[str, Any]]:
-        """Search broker symbols."""
+        """
+        Search broker symbols.
+        """
 
-        return self.rest.search_symbol(
-            text=text,
-        )
+        return self.broker.search_symbol(text)
 
-    def get_quote(
+    def quote(
         self,
         exchange: str,
         symbol: str,
     ) -> dict[str, Any]:
-        """Return current market quote."""
+        """
+        Return live quote.
+        """
 
-        return self.rest.get_quote(
-            exchange=exchange,
-            symbol=symbol,
+        return self.broker.get_quote(
+            exchange,
+            symbol,
         )
 
-    def get_option_chain(
+    def option_chain(
         self,
         symbol: str,
         expiry: str,
     ) -> dict[str, Any]:
-        """Return option chain."""
+        """
+        Return option chain.
+        """
 
-        return self.rest.get_option_chain(
-            symbol=symbol,
-            expiry=expiry,
+        return self.broker.get_option_chain(
+            symbol,
+            expiry,
         )
 
-    def get_historical_data(
+    def historical_data(
         self,
         exchange: str,
         symbol: str,
@@ -290,144 +243,61 @@ class FlattradeAdapter(BrokerInterface):
         start: str,
         end: str,
     ) -> list[dict[str, Any]]:
-        """Return historical data."""
+        """
+        Return historical candles.
+        """
 
-        return self.rest.get_historical_data(
-            exchange=exchange,
-            symbol=symbol,
-            interval=interval,
-            start=start,
-            end=end,
+        return self.broker.get_historical_data(
+            exchange,
+            symbol,
+            interval,
+            start,
+            end,
         )
-
-    # ==========================================================
-    # WebSocket
-    # ==========================================================
-
-    def connect_market_data(self) -> None:
-        """Connect to the market data stream."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def disconnect_market_data(self) -> None:
-        """Disconnect the market data stream."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def subscribe(
-        self,
-        instruments: list[str],
-    ) -> None:
-        """Subscribe to market data."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def unsubscribe(
-        self,
-        instruments: list[str],
-    ) -> None:
-        """Unsubscribe from market data."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    # ==========================================================
-    # Event Callbacks
-    # ==========================================================
-
-    def on_tick(
-        self,
-        callback: Callable[..., Any],
-    ) -> None:
-        """Register a tick callback."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def on_order_update(
-        self,
-        callback: Callable[..., Any],
-    ) -> None:
-        """Register an order update callback."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def on_trade(
-        self,
-        callback: Callable[..., Any],
-    ) -> None:
-        """Register a trade callback."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def on_position_update(
-        self,
-        callback: Callable[..., Any],
-    ) -> None:
-        """Register a position callback."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    def on_disconnect(
-        self,
-        callback: Callable[..., Any],
-    ) -> None:
-        """Register a disconnect callback."""
-
-        raise NotImplementedError(
-            "Flattrade WebSocket support is not implemented."
-        )
-
-    # ==========================================================
-    # Session
-    # ==========================================================
-
-    def refresh_session(self) -> bool:
-        """Return whether a valid session is available."""
-
-        return self.is_authenticated
-
-    def heartbeat(self) -> bool:
-        """Return broker connection status."""
-
-        return self.is_authenticated
-
     # ==========================================================
     # Information
     # ==========================================================
 
     @property
-    def broker_name(self) -> str:
-        """Return broker name."""
+    def version(self) -> str:
+        """
+        Return active broker adapter version.
+        """
 
-        return "Flattrade"
+        return self.broker.broker_version
+
+
 
     @property
-    def broker_version(self) -> str:
-        """Return adapter version."""
+    def available_brokers(self) -> list[str]:
+        """
+        Return registered brokers.
+        """
 
-        return ADAPTER_VERSION
+        return self.manager.available_brokers()
+
+    def use(self, broker: str) -> None:
+        """
+        Reserved for future multi-broker support.
+        """
+
+        raise NotImplementedError(
+            "Multiple brokers are not implemented yet."
+        )
 
     # ==========================================================
     # Context Manager
     # ==========================================================
 
-    def __enter__(self) -> "FlattradeAdapter":
-        """Enter context manager."""
+    def __enter__(self):
+        """
+        Automatically login.
+
+        Example:
+
+            with BrokerAdapter() as broker:
+                ...
+        """
 
         self.login()
 
@@ -435,11 +305,13 @@ class FlattradeAdapter(BrokerInterface):
 
     def __exit__(
         self,
-        exc_type: object,
-        exc_val: object,
-        exc_tb: object,
-    ) -> bool:
-        """Exit context manager."""
+        exc_type,
+        exc_value,
+        traceback,
+    ):
+        """
+        Automatically logout.
+        """
 
         self.logout()
 

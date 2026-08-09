@@ -94,6 +94,18 @@ class BrokerInterface(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def get_limits(
+        self,
+    ) -> Dict[str, Any]:
+        """
+        Returns account limits / margin.
+
+        Default implementation for brokers that expose
+        limits separately from funds.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def get_holdings(self) -> List[Dict[str, Any]]:
         """
         Returns holdings.
@@ -118,6 +130,20 @@ class BrokerInterface(ABC):
     def get_trades(self) -> List[Dict[str, Any]]:
         """
         Returns trade book.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_tradebook(
+        self,
+    ) -> List[Dict[str, Any]]:
+        """
+        Compatibility alias.
+
+        Some broker APIs expose TradeBook while
+        others expose Trades.
+
+        AEGIS supports both.
         """
         raise NotImplementedError
 

@@ -1,18 +1,13 @@
 {
-  "broker": "flattrade",
-
-  "client_id": "",
-  "user_id": "",
-  "vendor_code": "",
-
-  "api_key": "",
-  "api_secret": "",
-
-  "redirect_uri": "http://127.0.0.1:5000/flattrade/callback",
-
-  "imei": "AEGIS-PC",
-
-  "relay_shared_secret": "",
-
-  "relay_url": "http://YOUR_ORACLE_IP:8091"
+    "broker": "flattrade",
+    "client_id": "FZ02894",
+    "user_id": "",
+    "vendor_code": "",
+    "api_key": "121a92e6eb164fd883efcb2564cb21b1",
+    "api_secret": "2026.f831d085b4ee489f897f756e56de02af395f48c10aa6c124",
+    "redirect_uri": "http://127.0.0.1:5000/flattrade/callback",
+    "imei": "AEGIS-PC",
+    "relay_shared_secret": "AEGIS_RELAY_2026_SECRET",
+    "relay_url": "http://130.210.22.73:8091"
 }
+
