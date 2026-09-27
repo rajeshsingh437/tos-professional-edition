@@ -1,0 +1,12 @@
+recommend uploading these 4 files together:
+AEGIS_Flattrade_SENTRY_Handover_Master_Prompt.txt
+→ Give this to AEGIS first as the master instruction/baseline.
+
+OpenAlgo_Flattrade_Closing_AEGIS_Handover.docx
+→ Detailed record of what was changed, what works, what remains unresolved, and security precautions.
+
+AEGIS_Flattrade_SENTRY_Handover_Master_Prompt.md
+→ Same master prompt in Markdown; useful if AEGIS handles Markdown better.
+
+OpenAlgo_Flattrade_Closing_AEGIS_Handover.md
+→ Markdown reference version of the closing document.

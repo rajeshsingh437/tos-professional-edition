@@ -11,6 +11,8 @@ from __future__ import annotations
 from src.core.broker.adapters.flattrade_adapter import (
     FlattradeAdapter,
 )
+from src.core.events.event_bus import EventBus
+from src.core.market.market_data_service import MarketDataService
 
 
 class BrokerManager:
@@ -20,7 +22,28 @@ class BrokerManager:
 
     def __init__(self) -> None:
 
-        self.adapter = FlattradeAdapter()
+        self.event_bus = EventBus()
+
+        self.adapter = FlattradeAdapter(
+            event_bus=self.event_bus
+        )
+
+        self.market_data = MarketDataService(
+            event_bus=self.event_bus
+        )
+
+    # ==========================================================
+    # Market Data Service
+    # ==========================================================
+
+    def get_latest_tick(self, exchange: str, token: str):
+        return self.market_data.get_latest(exchange, token)
+
+    def get_all_latest_ticks(self):
+        return self.market_data.get_all_latest()
+
+    def market_data_snapshot(self):
+        return self.market_data.snapshot()
 
     # ==========================================================
     # Lifecycle
@@ -128,24 +151,47 @@ class BrokerManager:
     # Market Data
     # ==========================================================
 
-    def search_symbol(self, text):
+    def search_symbol(self, text, exchange='NSE'):
 
-        return self.adapter.search_symbol(text)
+        return self.adapter.search_symbol(
+            text,
+            exchange=exchange,
+        )
 
     def get_quote(
         self,
         exchange,
-        symbol,
+        token,
     ):
 
         return self.adapter.get_quote(
             exchange,
-            symbol,
+            token,
         )
 
-    def subscribe_market_data(self):
+    def get_time_price_series(
+        self,
+        exchange,
+        token,
+        start_time,
+        interval,
+    ):
 
-        self.adapter.subscribe_market_data()
+        return self.adapter.get_time_price_series(
+            exchange,
+            token,
+            start_time,
+            interval,
+        )
+
+    def subscribe_market_data(
+        self,
+        symbols: list[str],
+    ) -> None:
+
+        self.adapter.subscribe_market_data(
+            symbols
+        )
 
     def unsubscribe_market_data(
         self,
@@ -167,3 +213,7 @@ class BrokerManager:
     def subscribe_positions(self):
 
         self.adapter.subscribe_positions()
+
+
+
+

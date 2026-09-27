@@ -35,7 +35,7 @@ class RelayClient:
     def complete_login(self, request_code: str) -> dict[str, Any]:
         response = self.session.post(
             f"{self.base_url}/complete_login",
-            json={"code": request_code},
+            json={"request_code": request_code},
             timeout=20,
         )
 

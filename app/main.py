@@ -1,17 +1,11 @@
-import sys
+﻿"""
+AEGIS
 
-from PySide6.QtWidgets import QApplication
+Application Launcher
+Phase 1: SENTRY UI
+"""
 
-from app.application import TOSApplication
-
-
-def main() -> None:
-    app = QApplication(sys.argv)
-
-    window = TOSApplication()
-    window.show()
-
-    sys.exit(app.exec())
+from app.sentry_bridge import main
 
 
 if __name__ == "__main__":

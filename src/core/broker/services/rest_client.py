@@ -4,7 +4,9 @@ AEGIS
 Read-only Flattrade REST API Client
 """
 
+
 from __future__ import annotations
+import time
 
 import json
 from typing import Any
@@ -60,56 +62,71 @@ class RestClient:
     ) -> dict[str, Any] | list[dict[str, Any]]:
 
         try:
+            print("***** REST_CLIENT POST EXECUTING *****")
+
+            payload_string = (
+                f"jData={json.dumps(payload)}"
+                f"&jKey={self.access_token}"
+            )
+
+            print("\nOFFICIAL PAYLOAD")
+            print("=" * 70)
+            print(payload_string)
+            print("=" * 70)
 
             response = self.session.post(
-                f"{API_BASE_URL}/{endpoint}",
-                data={
-                    "jData": json.dumps(payload),
-                    "jKey": self.access_token,
-                },
-                timeout=REQUEST_TIMEOUT,
+    f"{API_BASE_URL}/{endpoint}",
+    data=payload_string,
+    headers={
+        "Content-Type": "application/x-www-form-urlencoded",
+    },
+    timeout=REQUEST_TIMEOUT,
             )
+
+
+            print()
+            print("=" * 70)
+            print(f"{endpoint} STATUS")
+            print("=" * 70)
+            print(response.status_code)
+
+            print()
+            print("=" * 70)
+            print(f"{endpoint} TEXT")
+            print("=" * 70)
+            print(response.text)
+            print("=" * 70)
+            print("\n" + "=" * 70)
+            print("REQUEST HEADERS")
+            print("=" * 70)
+            print(response.request.headers)
+
+            print("\nBODY SENT")
+            print("=" * 70)
+            print(response.request.body)
+            print("=" * 70)
 
             response.raise_for_status()
 
-        except requests.RequestException as error:
-
-            raise RestClientError(
-                f"{endpoint} request failed."
-            ) from error
-
-        try:
-
             result = response.json()
 
-        except ValueError as error:
+            print("\n" + "=" * 70)
+            print(f"{endpoint} RESPONSE")
+            print("=" * 70)
+            print(result)
+            print("=" * 70)
 
+            return result
+
+        except requests.RequestException as exc:
             raise RestClientError(
-                "Broker returned invalid JSON."
-            ) from error
+                f"{endpoint} request failed: {exc}"
+            ) from exc
 
-        if (
-            isinstance(result, dict)
-            and result.get("stat") == "Not_Ok"
-        ):
-
+        except ValueError as exc:
             raise RestClientError(
-                result.get(
-                    "emsg",
-                    f"{endpoint} failed.",
-                )
-            )
-
-        if not isinstance(
-            result,
-            (dict, list),
-        ):
-
-            raise RestClientError(
-                "Unexpected response type."
-            )
-
-        return result
+                f"{endpoint} returned invalid JSON."
+            ) from exc
 
     # ==========================================================
     # Payload Builders
@@ -132,7 +149,8 @@ class RestClient:
     ) -> dict[str, Any]:
 
         return self._account_payload(
-            **values
+            ordersource="API",
+            **values,
         )
 
     # ==========================================================
@@ -145,10 +163,7 @@ class RestClient:
         endpoint: str,
     ) -> dict[str, Any]:
 
-        if isinstance(
-            value,
-            dict,
-        ):
+        if isinstance(value, dict):
             return value
 
         raise RestClientError(
@@ -161,16 +176,36 @@ class RestClient:
         endpoint: str,
     ) -> list[dict[str, Any]]:
 
-        if isinstance(
-            value,
-            list,
-        ):
+        if isinstance(value, list):
             return value
 
+        if isinstance(value, dict):
+
+            if value.get("stat") == "Not_Ok":
+
+                message = (
+                    str(value.get("emsg", ""))
+                    .lower()
+                    .strip()
+                )
+
+                if "no data" in message:
+                    return []
+
+            if value.get("stat") == "Ok":
+
+                values = value.get("values")
+
+                if isinstance(values, list):
+                    return values
+
+                return []
+
         raise RestClientError(
-            f"{endpoint} returned invalid data."
+            f"{endpoint} returned invalid data: {value}"
         )
-        # ==========================================================
+
+    # ==========================================================
     # Account APIs
     # ==========================================================
 
@@ -245,8 +280,7 @@ class RestClient:
             result,
             "TradeBook",
         )
-
-    # ==========================================================
+            # ==========================================================
     # Order APIs
     # ==========================================================
 
@@ -257,9 +291,7 @@ class RestClient:
 
         result = self.post(
             "PlaceOrder",
-            self._order_payload(
-                **values,
-            ),
+            self._order_payload(**values),
         )
 
         return self._as_dict(
@@ -274,9 +306,7 @@ class RestClient:
 
         result = self.post(
             "ModifyOrder",
-            self._order_payload(
-                **values,
-            ),
+            self._order_payload(**values),
         )
 
         return self._as_dict(
@@ -300,27 +330,10 @@ class RestClient:
             result,
             "CancelOrder",
         )
-        # ==========================================================
+
+    # ==========================================================
     # Market Data APIs
     # ==========================================================
-
-    def search_symbol(
-        self,
-        text: str,
-    ) -> list[dict[str, Any]]:
-
-        result = self.post(
-            "SearchScrip",
-            {
-                "uid": self.client_id,
-                "stext": text,
-            },
-        )
-
-        return self._as_list(
-            result,
-            "SearchScrip",
-        )
 
     def get_quote(
         self,
@@ -342,6 +355,26 @@ class RestClient:
             "GetQuotes",
         )
 
+    def search_symbol(
+        self,
+        exchange: str,
+        searchtext: str,
+    ) -> list[dict[str, Any]]:
+
+        result = self.post(
+            "SearchScrip",
+            {
+                "uid": self.client_id,
+                "exch": exchange,
+                "stext": searchtext,
+            },
+        )
+
+        return self._as_list(
+            result,
+            "SearchScrip",
+        )
+
     def get_option_chain(
         self,
         exchange: str,
@@ -351,19 +384,19 @@ class RestClient:
     ) -> list[dict[str, Any]]:
 
         result = self.post(
-            "GetOptionChain",
+            "OptionChain",
             {
                 "uid": self.client_id,
                 "exch": exchange,
                 "tsym": tradingsymbol,
-                "strprc": strike_price,
-                "cnt": count,
+                "strprc": str(strike_price),
+                "cnt": str(count),
             },
         )
 
         return self._as_list(
             result,
-            "GetOptionChain",
+            "OptionChain",
         )
 
     def get_time_price_series(
@@ -374,14 +407,23 @@ class RestClient:
         interval: int,
     ) -> list[dict[str, Any]]:
 
+        start_timestamp = int(
+            time.mktime(
+                time.strptime(
+                    start_time,
+                    "%d-%m-%Y %H:%M:%S",
+                )
+            )
+        )
+
         result = self.post(
             "TPSeries",
             {
                 "uid": self.client_id,
                 "exch": exchange,
                 "token": token,
-                "st": start_time,
-                "intrv": interval,
+                "st": str(start_timestamp),
+                "intrv": str(interval),
             },
         )
 
@@ -391,67 +433,26 @@ class RestClient:
         )
 
     # ==========================================================
-    # Utility
+    # Health
     # ==========================================================
 
-    def check_connection(self) -> bool:
-        """
-        Verify authentication by requesting account limits.
-        """
+    def check_connection(
+        self,
+    ) -> bool:
 
         try:
-
             self.get_limits()
-
-            return True
-
-        except Exception:
-
+        except RestClientError:
             return False
-            # ==========================================================
-    # Future APIs (Reserved)
+
+        return True
+
+    # ==========================================================
+    # Cleanup
     # ==========================================================
 
-    def get_margin(
+    def close(
         self,
-    ) -> dict[str, Any]:
-        """
-        Reserved for future margin APIs.
-        """
-
-        raise NotImplementedError
-
-    def get_funds(
-        self,
-    ) -> dict[str, Any]:
-        """
-        Reserved for future funds APIs.
-        """
-
-        raise NotImplementedError
-
-    def get_order_history(
-        self,
-        orderno: str,
-    ) -> dict[str, Any]:
-        """
-        Reserved for future order history API.
-        """
-
-        raise NotImplementedError
-
-    def get_daily_pnl(
-        self,
-    ) -> dict[str, Any]:
-        """
-        Reserved for future analytics.
-        """
-
-        raise NotImplementedError
-
-    def close(self) -> None:
-        """
-        Close HTTP session.
-        """
+    ) -> None:
 
         self.session.close()

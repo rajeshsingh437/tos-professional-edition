@@ -91,9 +91,15 @@ class OAuthClient:
         try:
             resp_payload: dict[str, Any] = response.json()
 
+            print("\n" + "=" * 70)
+            print("TOKEN RESPONSE")
+            print("=" * 70)
+            print(resp_payload)
+            print("=" * 70)
+
+            return resp_payload
+
         except ValueError as error:
             raise OAuthError(
                 "Relay returned an invalid response"
             ) from error
-
-        return resp_payload

@@ -38,18 +38,17 @@ class RestClient:
             raise RestClientError("A Flattrade client ID is required")
 
         try:
+            payload_str = f"jData={json.dumps(payload)}&jKey={self.access_token}"
             response = self.session.post(
                 f"{API_BASE_URL}/{endpoint}",
-                data={
-                    "jData": json.dumps(payload),
-                    "jKey": self.access_token,
-                },
+                data=payload_str,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
                 timeout=REQUEST_TIMEOUT,
             )
             response.raise_for_status()
         except requests.RequestException as error:
             raise RestClientError(
-                f"Flattrade {endpoint} request failed"
+                f"Flattrade {endpoint} request failed: {error}"
             ) from error
 
         try:
@@ -60,8 +59,10 @@ class RestClient:
             ) from error
 
         if isinstance(result, dict) and result.get("stat") == "Not_Ok":
-            message = result.get("emsg") or f"Flattrade {endpoint} failed"
-            raise RestClientError(str(message))
+            message = str(result.get("emsg") or f"Flattrade {endpoint} failed")
+            if endpoint in ("OrderBook", "TradeBook", "PositionBook", "Holdings") and "no data" in message.lower():
+                return []
+            raise RestClientError(message)
 
         if not isinstance(result, (dict, list)):
             raise RestClientError(

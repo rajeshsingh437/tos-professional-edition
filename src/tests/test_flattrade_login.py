@@ -41,9 +41,16 @@ def main() -> None:
             print(limits)
 
         except Exception as error:
-            print(error)
+            import traceback
 
-    broker.disconnect()
+            print("\n" + "=" * 60)
+            print("LIMITS REQUEST FAILED")
+            print("=" * 60)
+            print(f"Exception Type : {type(error).__name__}")
+            print(f"Exception      : {error}")
+            print("\nFull Traceback:\n")
+            traceback.print_exc()
+            print("=" * 60)
 
     print("\nDisconnected.")
     print("=" * 60)

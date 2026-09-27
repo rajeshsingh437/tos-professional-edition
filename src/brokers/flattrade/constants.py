@@ -26,7 +26,7 @@ WEBSOCKET_URL = "wss://piconnect.flattrade.in/PiConnectWSAPI/"
 # ------------------------------------------------------------------
 
 CALLBACK_HOST = "127.0.0.1"
-CALLBACK_PORT = 5050
+CALLBACK_PORT = 5000
 CALLBACK_PATH = "/flattrade/callback"
 CALLBACK_URL = f"http://{CALLBACK_HOST}:{CALLBACK_PORT}{CALLBACK_PATH}"
 # ------------------------------------------------------------------

@@ -18,6 +18,10 @@ env/
 # Environment Variables
 .env
 
+# Telegram Session
+*.session
+*.session-journal
+
 # Python build artifacts
 build/
 dist/
@@ -84,3 +88,13 @@ references/
 node_modules/
 dist-ssr/
 *.local
+
+# -----------------------------
+# Backups and temporary files
+# -----------------------------
+*.bak
+*.backup*
+*.pre-*
+*.phase1-backup
+.handoff/
+data/

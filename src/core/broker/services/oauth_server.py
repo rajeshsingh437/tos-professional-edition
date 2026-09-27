@@ -3,16 +3,17 @@ AEGIS
 
 OAuth Callback Server
 
-Receives the OAuth callback from Flattrade and forwards the
-request_code to the Oracle Relay Server.
+Receives the OAuth callback from Flattrade.
 
-The local PC NEVER exchanges tokens directly with Flattrade.
+Its ONLY responsibility is to receive the request code and
+make it available to the broker adapter.
+
+The broker adapter is responsible for calling the Oracle Relay.
 """
 
 from __future__ import annotations
 
 import threading
-import requests
 
 from flask import Flask, request
 
@@ -20,8 +21,6 @@ from src.core.broker.constants import (
     CALLBACK_HOST,
     CALLBACK_PORT,
 )
-
-from config.settings import load_broker
 
 
 class OAuthServer:
@@ -33,11 +32,6 @@ class OAuthServer:
 
         self.request_code: str | None = None
         self.ready = False
-
-        broker = load_broker()
-
-        self.relay_url = broker["relay_url"]
-        self.relay_secret = broker["relay_shared_secret"]
 
         self.app = Flask(__name__)
 
@@ -66,69 +60,6 @@ class OAuthServer:
             print("Extracted request_code:", self.request_code)
             print()
 
-            try:
-
-                url = f"{self.relay_url}/complete_login"
-
-                print("Sending request code to Oracle Relay")
-                print(url)
-                print()
-
-                response = requests.post(
-                    url,
-                    json={
-                        "code": self.request_code,
-                    },
-                    headers={
-                        "Authorization":
-                        f"Bearer {self.relay_secret}"
-                    },
-                    timeout=30,
-                )
-
-                print("Relay HTTP Status :", response.status_code)
-
-                payload = response.json()
-
-                print("Relay Response")
-                print(payload)
-                print("=" * 70)
-                print()
-
-                if response.status_code != 200:
-
-                    return (
-                        "<html>"
-                        "<body style='font-family:Arial;"
-                        "text-align:center;"
-                        "margin-top:80px;'>"
-                        "<h2>AEGIS</h2>"
-                        "<h3>Login Failed</h3>"
-                        f"<p>{payload.get('error')}</p>"
-                        "</body>"
-                        "</html>",
-                        500,
-                    )
-
-            except Exception as e:
-
-                import traceback
-
-                traceback.print_exc()
-
-                return (
-                    "<html>"
-                    "<body style='font-family:Arial;"
-                    "text-align:center;"
-                    "margin-top:80px;'>"
-                    "<h2>AEGIS</h2>"
-                    "<h3>Unable to contact Oracle Relay</h3>"
-                    f"<p>{e}</p>"
-                    "</body>"
-                    "</html>",
-                    500,
-                )
-
             self.stop_server()
 
             return (
@@ -138,7 +69,6 @@ class OAuthServer:
                 "margin-top:80px;'>"
                 "<h2>AEGIS</h2>"
                 "<h3>Login Successful</h3>"
-                "<p>Oracle Relay authenticated successfully.</p>"
                 "<p>You may close this window.</p>"
                 "</body>"
                 "</html>"
@@ -178,7 +108,6 @@ class OAuthServer:
                 print("=" * 70)
 
                 traceback.print_exc()
-
                 print("=" * 70)
 
         self._thread = threading.Thread(
